@@ -1,0 +1,185 @@
+<div class="container">
+  <div >
+    <div class="row">
+      <div class="col-sm-9"></div>
+      <div class="col-sm-3">
+        <div class="row" >
+          <div class="col-sm-6">
+            <div class="m-2">
+         <input
+                (change)="getJobs()"
+                [(ngModel)]="limit"
+                class="form-control w-100"
+                type="number"
+                placeholder="Limit"
+              />
+            </div>
+          </div>
+          <div class="col-sm-6" *ngIf="user?.role == roles.Admin">
+            <div class="m-2">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="openCreateJobModal(template)"
+              >
+                Add Job
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class="table table-responsive table-stripped table-bordered mt-1">
+      <thead>
+        <tr>
+          <th width="5%">S.No</th>
+          <th width="10%" class="text-center">Image</th>
+          <th width="20%">Title</th>
+          <th width="40%">Description</th>
+          <th width="15%" *ngIf="user?.role == roles.Admin">Action</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="jobs.length">
+        <tr *ngFor="let job of jobs; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td class="text-center">
+            <img
+              class="img-thumbnail"
+              [src]="job.image"
+              onerror="this.src='assets/warning.png'"
+            />
+          </td>
+          <td>
+            {{ job.title }}
+          </td>
+          <td>
+            {{ job.description }}
+          </td>
+
+          <td *ngIf="user?.role == roles.Admin">
+            <i
+              class="btn btn-warning btn-sm"
+              aria-hidden="true"
+              (click)="onEditJob(job)"
+              >Edit</i
+            >
+            <i
+              class="btn btn-danger btn-sm ml-2"
+              aria-hidden="true"
+              (click)="onDeleteJob(job)"
+              >Delete</i
+            >
+          </td>
+        </tr>
+      </tbody>
+      <ng-container *ngIf="!jobs.length">
+        <div class="m-5 text-muted text-center">No jobs found !</div>
+      </ng-container>
+    </table>
+
+    <div class="d-flex flex-row justify-content-center">
+      <div class="p-2">
+        <button
+          class="btn btn-primary"
+          *ngIf="page_number > 1"
+          (click)="previous()"
+        >
+          < Prev
+        </button>
+      </div>
+      <div class="p-2">
+        <button
+          class="btn btn-primary"
+          *ngIf="page_number >= 0"
+          (click)="next()"
+        >
+          Next >
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Add Job</h4>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="jobForm" (ngSubmit)="createJob()">
+        <div class="form-group">
+          <label for="title">Job title</label>
+          <input
+            type="text"
+            id="title"
+            class="form-control"
+            formControlName="title"
+          />
+        </div>
+        <div
+          *ngIf="
+            jobForm.controls['title'].invalid &&
+            (jobForm.controls['title'].dirty ||
+              jobForm.controls['title'].touched)
+          "
+          class="alert alert-danger"
+        >
+          <div *ngIf="jobForm.controls['title'].errors.required">
+            Job title is required.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="title">Job description</label>
+          <textarea
+            type="text"
+            id="title"
+            class="form-control"
+            formControlName="description"
+          ></textarea>
+        </div>
+        <div
+          *ngIf="
+            jobForm.controls['description'].invalid &&
+            (jobForm.controls['description'].dirty ||
+              jobForm.controls['description'].touched)
+          "
+          class="alert alert-danger"
+        >
+          <div *ngIf="jobForm.controls['description'].errors.required">
+            Job description is required.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="title">Job Image</label>
+          <input
+            type="file"
+            formControlName="image"
+            (change)="onFileSelected($event)"
+            class="form-control"
+          />
+        </div>
+        <div
+          *ngIf="
+            jobForm.controls['image'].invalid &&
+            (jobForm.controls['image'].dirty ||
+              jobForm.controls['image'].touched)
+          "
+          class="alert alert-danger"
+        >
+          <div *ngIf="jobForm.controls['image'].errors.required">
+            Job image is required.
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="text-right">
+            <button
+              [disabled]="jobForm?.invalid"
+              class="btn btn-success pull-right"
+            >
+              {{ button }}
+            </button>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>

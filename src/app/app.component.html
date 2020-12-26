@@ -1,0 +1,33 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light" *ngIf="user">
+  <a class="navbar-brand">Jobs</a>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <form class="form-inline my-2 my-lg-0">
+      <div class="btn-group" dropdown>
+        <button
+          id="button-animated"
+          dropdownToggle
+          type="button"
+          class="btn btn-primary dropdown-toggle"
+          aria-controls="dropdown-animated"
+        >
+          {{ user.username }} <span class="caret"></span>
+        </button>
+        <ul
+          id="dropdown-animated"
+          *dropdownMenu
+          class="dropdown-menu"
+          role="menu"
+          aria-labelledby="button-animated"
+        >
+          <li role="menuitem">
+            <a class="dropdown-item pointer" (click)="logout()">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </form>
+  </div>
+</nav>
+
+<div class="mt-2">
+  <router-outlet></router-outlet>
+</div>
